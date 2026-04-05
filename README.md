@@ -52,6 +52,20 @@ sudo ./install-service.sh --no-enable
 sudo ./install-service.sh --no-start
 ```
 
+To uninstall the systemd service and remove installed files:
+
+``` bash
+chmod +x uninstall-service.sh
+sudo ./uninstall-service.sh
+```
+
+Optional flags:
+
+``` bash
+sudo ./uninstall-service.sh --no-stop
+sudo ./uninstall-service.sh --no-disable
+```
+
 2. (Manual alternative) Copy the script and service file to the expected
   locations:
 
