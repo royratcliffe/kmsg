@@ -7,4 +7,4 @@ build:
 
 .PHONY: run
 run: build
-	docker run --network=host --privileged --rm $(IMAGE):latest -v
+	docker run --device=/dev/kmsg --network=host --rm $(IMAGE):latest -v
