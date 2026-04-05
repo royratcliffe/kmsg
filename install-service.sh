@@ -83,6 +83,8 @@ echo "Installing $SCRIPT_NAME to $INSTALL_DIR"
 install -d "$INSTALL_DIR"
 install -m 0644 "$SCRIPT_DIR/$SCRIPT_NAME" "$INSTALL_DIR/$SCRIPT_NAME"
 
+# The service file is installed with the correct ExecStart path. Use a temporary
+# file to avoid modifying the original service file in the scripts directory.
 echo "Installing $SERVICE_NAME to $UNIT_DIR"
 TMP_SERVICE_FILE=$(mktemp)
 trap 'rm -f "$TMP_SERVICE_FILE"' EXIT HUP INT TERM
