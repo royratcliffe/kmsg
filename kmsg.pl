@@ -17,9 +17,9 @@ main(Argv) :-
                         sequence, Sequence,
                         timestamp, TimeStamp,
                         flags, Flags,
-                        message, Message), Timestamp),
+                        message, Message), RedisStamp),
     (   Verbose == true
-    ->  format('~w ~w ~w ~w ~w ~w~n', [Timestamp, Priority, Sequence, TimeStamp, Flags, Message])
+    ->  format('~w ~w ~w ~w ~w ~w~n', [RedisStamp, Priority, Sequence, TimeStamp, Flags, Message])
     ;   true
     ),
     fail.
