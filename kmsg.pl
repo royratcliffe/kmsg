@@ -1,8 +1,15 @@
 :- use_module(library(dcg/basics)).
 
+opt_type(v, verbose, boolean).
+opt_type(verbose, verbose, boolean).
+
+opt_help(verbose, 'Enable verbose output').
+
 % Reads kernel messages from /dev/kmsg and stores them in a Redis stream named "kmsg".
 % Uses a repeat-fail loop to continuously read messages until the program is terminated.
-main :-
+main(Argv) :-
+    argv_options(Argv, [], Options),
+    option(verbose(Verbose), Options, false),
     repeat,
     kmsg(Priority, Sequence, TimeStamp, Flags, Message),
     redis(default, xadd(kmsg, *,
@@ -10,8 +17,14 @@ main :-
                         sequence, Sequence,
                         timestamp, TimeStamp,
                         flags, Flags,
-                        message, Message)),
+                        message, Message), Timestamp),
+    (   Verbose == true
+    ->  format('~w ~w ~w ~w ~w ~w~n', [Timestamp, Priority, Sequence, TimeStamp, Flags, Message])
+    ;   true
+    ),
     fail.
+
+:- initialization(main, main).
 
 %! kmsg(-Priority, -Sequence, -TimeStamp, -Flags, -Message) is semidet.
 % Reads a line from /dev/kmsg and parses it into its components. Opens the
