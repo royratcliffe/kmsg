@@ -1,9 +1,5 @@
 :- use_module(library(dcg/basics)).
 
-/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
 % Reads kernel messages from /dev/kmsg and stores them in a Redis stream named "kmsg".
 % Uses a repeat-fail loop to continuously read messages until the program is terminated.
 main :-
@@ -60,7 +56,3 @@ kmsg(Priority, Sequence, TimeStamp, Flags, Message) -->
     string_without(";", Flags),
     ";",
     string(Message).
-
-/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
