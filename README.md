@@ -33,6 +33,47 @@ access to `/dev/kmsg`:
 docker run --rm -it --device=/dev/kmsg --network=host kmsg
 ```
 
+## Systemd Service
+
+For running directly on a Linux host, this repository includes
+`kmsg.service`.
+
+1. Copy the script and service file to the expected locations:
+
+``` bash
+sudo install -d /opt/kmsg
+sudo install -m 0644 kmsg.pl /opt/kmsg/kmsg.pl
+sudo install -m 0644 kmsg.service /etc/systemd/system/kmsg.service
+```
+
+2. Verify paths in the service file if you want a different install
+   location:
+
+``` bash
+sudo systemctl edit --full kmsg.service
+```
+
+3. Reload systemd and enable the service:
+
+``` bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now kmsg.service
+```
+
+4. Check service status and logs:
+
+``` bash
+systemctl status kmsg.service
+journalctl -u kmsg.service -f
+```
+
+Notes:
+
+- The service runs as root because reading `/dev/kmsg` typically requires
+  elevated privileges.
+- `kmsg.service` starts after networking and `redis.service`. If your
+  Redis unit has a different name, update the `After=` line.
+
 ## Future Enhancements
 
 It connects to the default Redis server at `localhost:6379` but could be
