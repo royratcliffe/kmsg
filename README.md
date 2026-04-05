@@ -38,7 +38,22 @@ docker run --rm -it --device=/dev/kmsg --network=host kmsg
 For running directly on a Linux host, this repository includes
 `kmsg.service`.
 
-1. Copy the script and service file to the expected locations:
+1. Run the installer script:
+
+``` bash
+chmod +x install-service.sh
+sudo ./install-service.sh
+```
+
+Optional flags:
+
+``` bash
+sudo ./install-service.sh --no-enable
+sudo ./install-service.sh --no-start
+```
+
+2. (Manual alternative) Copy the script and service file to the expected
+  locations:
 
 ``` bash
 sudo install -d /opt/kmsg
@@ -46,21 +61,21 @@ sudo install -m 0644 kmsg.pl /opt/kmsg/kmsg.pl
 sudo install -m 0644 kmsg.service /etc/systemd/system/kmsg.service
 ```
 
-2. Verify paths in the service file if you want a different install
+3. Verify paths in the service file if you want a different install
    location:
 
 ``` bash
 sudo systemctl edit --full kmsg.service
 ```
 
-3. Reload systemd and enable the service:
+4. Reload systemd and enable the service:
 
 ``` bash
 sudo systemctl daemon-reload
 sudo systemctl enable --now kmsg.service
 ```
 
-4. Check service status and logs:
+5. Check service status and logs:
 
 ``` bash
 systemctl status kmsg.service
