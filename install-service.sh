@@ -61,7 +61,11 @@ if ! command -v swipl >/dev/null 2>&1; then
   exit 1
 fi
 
+# Determine the directory of this script. This is more robust than using $0
+# directly, especially if the script is called via a symlink or from a different
+# directory.
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+echo "Script directory: $SCRIPT_DIR"
 
 if [ ! -f "$SCRIPT_DIR/$SCRIPT_NAME" ]; then
   echo "Cannot find $SCRIPT_NAME next to this installer script." >&2
