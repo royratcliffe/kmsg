@@ -61,6 +61,8 @@ if ! command -v swipl >/dev/null 2>&1; then
   exit 1
 fi
 
+SWIPL_PATH=$(command -v swipl)
+
 # Determine the directory of this script. This is more robust than using $0
 # directly, especially if the script is called via a symlink or from a different
 # directory.
@@ -82,7 +84,11 @@ install -d "$INSTALL_DIR"
 install -m 0644 "$SCRIPT_DIR/$SCRIPT_NAME" "$INSTALL_DIR/$SCRIPT_NAME"
 
 echo "Installing $SERVICE_NAME to $UNIT_DIR"
-install -m 0644 "$SCRIPT_DIR/$SERVICE_NAME" "$UNIT_DIR/$SERVICE_NAME"
+TMP_SERVICE_FILE=$(mktemp)
+trap 'rm -f "$TMP_SERVICE_FILE"' EXIT HUP INT TERM
+sed "s|^ExecStart=.*|ExecStart=$SWIPL_PATH -q -s $INSTALL_DIR/$SCRIPT_NAME --|" \
+  "$SCRIPT_DIR/$SERVICE_NAME" > "$TMP_SERVICE_FILE"
+install -m 0644 "$TMP_SERVICE_FILE" "$UNIT_DIR/$SERVICE_NAME"
 
 echo "Reloading systemd"
 systemctl daemon-reload
