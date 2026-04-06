@@ -11,8 +11,8 @@ run: build
 
 .PHONY: install-service
 install-service:
-	sudo sh install-service.sh
+	sudo sh install-service.sh $(ARGS)
 
 .PHONY: uninstall-service
 uninstall-service:
-	sudo sh uninstall-service.sh
+	sudo sh uninstall-service.sh $(ARGS)
