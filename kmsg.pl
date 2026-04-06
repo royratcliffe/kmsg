@@ -8,7 +8,7 @@ opt_help(verbose, 'Enable verbose output').
 % Reads kernel messages from /dev/kmsg and stores them in a Redis stream named
 % "kmsg". Uses a repeat-fail loop to continuously read messages until the
 % program is terminated. Perform automatic trimming of the Redis stream to keep
-% only the most recent 1000 messages, preventing unbounded growth.
+% only the most recent (roughly) 1000 messages, preventing unbounded growth.
 main(Argv) :-
     argv_options(Argv, [], Options),
     option(verbose(Verbose), Options, false),
