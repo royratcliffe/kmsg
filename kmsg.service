@@ -1,6 +1,8 @@
+# This service reads kernel messages from /dev/kmsg and forwards them to a Redis stream.
+# It is designed to run on Linux systems and requires the Redis server to be running.
 [Unit]
 Description=Kernel message to Redis stream bridge
-After=redis.service
+Requires=redis.service
 
 [Service]
 Type=simple
