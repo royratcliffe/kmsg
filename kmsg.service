@@ -1,7 +1,6 @@
 [Unit]
 Description=Kernel message to Redis stream bridge
-After=network-online.target redis.service
-Wants=network-online.target
+After=redis.service
 
 [Service]
 Type=simple
