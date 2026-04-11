@@ -2,6 +2,8 @@
 # It is designed to run on Linux systems and requires the Redis server to be running.
 [Unit]
 Description=Kernel message to Redis stream bridge
+After=network-online.target redis.service
+Wants=network-online.target
 Requires=redis.service
 
 [Service]
