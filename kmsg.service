@@ -1,0 +1,25 @@
+# This service reads kernel messages from /dev/kmsg and forwards them to a Redis stream.
+# It is designed to run on Linux systems and requires the Redis server to be running.
+[Unit]
+Description=Kernel message to Redis stream bridge
+After=network-online.target redis.service
+Wants=network-online.target
+Requires=redis.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/kmsg
+ExecStart=/usr/bin/swipl -q -s /opt/kmsg/kmsg.pl --
+Restart=always
+RestartSec=2
+
+# Reading /dev/kmsg requires elevated privileges on most systems.
+User=root
+Group=root
+
+# Keep journald logs; useful if verbose mode is enabled later.
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

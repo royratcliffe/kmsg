@@ -5,14 +5,16 @@ opt_type(verbose, verbose, boolean).
 
 opt_help(verbose, 'Enable verbose output').
 
-% Reads kernel messages from /dev/kmsg and stores them in a Redis stream named "kmsg".
-% Uses a repeat-fail loop to continuously read messages until the program is terminated.
+% Reads kernel messages from /dev/kmsg and stores them in a Redis stream named
+% "kmsg". Uses a repeat-fail loop to continuously read messages until the
+% program is terminated. Perform automatic trimming of the Redis stream to keep
+% only the most recent 1000 messages, preventing unbounded growth.
 main(Argv) :-
     argv_options(Argv, [], Options),
     option(verbose(Verbose), Options, false),
     repeat,
     kmsg(Priority, Sequence, TimeStamp, Flags, Message),
-    redis(default, xadd(kmsg, *,
+    redis(default, xadd(kmsg, maxlen, ~, 1000, *,
                         priority, Priority,
                         sequence, Sequence,
                         timestamp, TimeStamp,
