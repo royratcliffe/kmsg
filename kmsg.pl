@@ -14,19 +14,22 @@ redis_server :-
 
 opt_type(v, verbose, boolean).
 opt_type(verbose, verbose, boolean).
+opt_type(maxlen, maxlen, integer).
 
 opt_help(verbose, 'Enable verbose output').
+opt_help(maxlen, 'Maximum number of messages to keep in the Redis kmsg stream (default: 1000)').
 
 % Reads kernel messages from /dev/kmsg and stores them in a Redis stream named
 % "kmsg". Uses a repeat-fail loop to continuously read messages until the
 % program is terminated. Perform automatic trimming of the Redis stream to keep
-% only the most recent (roughly) 1000 messages, preventing unbounded growth.
+% only the most recent (roughly) MaxLen messages, preventing unbounded growth.
 main(Argv) :-
     argv_options(Argv, [], Options),
     option(verbose(Verbose), Options, false),
+    option(maxlen(MaxLen), Options, 1000),
     repeat,
     kmsg(Priority, Sequence, TimeStamp, Flags, Message),
-    redis(default, xadd(kmsg, maxlen, ~, 1000, *,
+    redis(default, xadd(kmsg, maxlen, ~, MaxLen, *,
                         priority, Priority,
                         sequence, Sequence,
                         timestamp, TimeStamp,
