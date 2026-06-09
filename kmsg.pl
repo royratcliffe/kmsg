@@ -1,14 +1,16 @@
 :- use_module(library(dcg/basics)).
 
 :- setting(rediscli_host, atom, env('REDISCLI_HOST', localhost), 'Host of the Redis server').
+:- setting(rediscli_port, integer, env('REDISCLI_PORT', 6379), 'Port of the Redis server').
 
 :- initialization(redis_server, after_load).
 
-% Connect to Redis server at Host:6379 with version 3 compatibility.
-% This assumes the Redis server is running on the default port 6379.
+% Connect to Redis server at Host:Port with version 3 compatibility.
+% This assumes the Redis server is running on the specified port.
 redis_server :-
     setting(rediscli_host, Host),
-    redis_server(default, Host:6379, [version(3)]).
+    setting(rediscli_port, Port),
+    redis_server(default, Host:Port, [version(3)]).
 
 opt_type(v, verbose, boolean).
 opt_type(verbose, verbose, boolean).
